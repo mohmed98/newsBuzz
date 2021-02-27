@@ -1,9 +1,9 @@
-import { Box, Container, Flex } from "@chakra-ui/react";
+import { Box, Container, Flex, Spacer } from "@chakra-ui/react";
 import Head from "next/head";
-import styles from "../styles/Home.module.css";
 import Navbar from "../comps/Navbar";
+import NewsList from "../comps/NewsList";
 
-export default function Home() {
+export default function Home({ news }) {
   return (
     <>
       <Head>
@@ -11,33 +11,45 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Navbar />
-      <Container backgroundColor="#f5f5f5">
+      <main
+        style={{
+          backgroundColor: "#f5f5f5",
+          marginTop: "15vh",
+          padding: "1rem",
+        }}
+      >
         <Flex>
           <Box
             display={{ lg: "block", base: "none" }}
             pos="fixed"
             height="100%"
             w="200px"
-            left="20"
-            bg="whatsapp.100"
-          >
-            Hello
+            left="15"
+            bg="white"
+            flex="1"
+          ></Box>
+
+          <Box flex="2">
+            <NewsList news={news} />
           </Box>
-          <Box flex="1" bg="whatsapp.100">
-            Hello
-          </Box>
+
           <Box
-            display={{ lg: "block", base: "none" }}
+            display={{ lg: "block", md: "none", base: "none" }}
             pos="fixed"
             height="100%"
             w="200px"
-            right="20"
-            bg="whatsapp.100"
-          >
-            Hello
-          </Box>
+            right="15"
+            bg="white"
+            flex="1"
+          ></Box>
         </Flex>
-      </Container>
+      </main>
     </>
   );
+}
+export async function getServerSideProps() {
+  const res = await fetch("http://80.240.21.204:1337/news?skip=12&limit=10");
+  const data = await res.json();
+
+  return { props: { news: data.news } };
 }
